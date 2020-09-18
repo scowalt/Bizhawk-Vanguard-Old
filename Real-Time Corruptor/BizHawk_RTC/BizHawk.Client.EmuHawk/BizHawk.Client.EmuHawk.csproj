@@ -2296,7 +2296,7 @@
     <Folder Include="config\Saturn\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
@@ -2304,7 +2304,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)..\..\..\RTCV\Build\Newtonsoft.Json.dll" "$(SolutionDir)output\Newtonsoft.Json.dll"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(SolutionDir)..\..\..\RTCV\Build\net471\Newtonsoft.Json.dll" "$(SolutionDir)output\Newtonsoft.Json.dll"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">"$(SolutionDir)subwcrev.bat" "$(ProjectDir)"</PreBuildEvent>

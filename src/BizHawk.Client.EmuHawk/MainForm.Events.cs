@@ -306,9 +306,13 @@ namespace BizHawk.Client.EmuHawk
 
 		private void CloseRomMenuItem_Click(object sender, EventArgs e)
 		{
+			//RTC_HIJACK : Disable normal CloseRom and replace with RTC CloseRom
+			RTCV.BizhawkVanguard.Hooks.CLOSE_GAME(true);
+			/*
 			Console.WriteLine($"Closing rom clicked Frame: {Emulator.Frame} Emulator: {Emulator.GetType().Name}");
 			CloseRom();
 			Console.WriteLine($"Closing rom clicked DONE Frame: {Emulator.Frame} Emulator: {Emulator.GetType().Name}");
+			*/
 		}
 
 		private void Savestate1MenuItem_Click(object sender, EventArgs e) => SaveQuickSave("QuickSave1");
@@ -760,7 +764,10 @@ namespace BizHawk.Client.EmuHawk
 
 		private void DisplayLogWindowMenuItem_Click(object sender, EventArgs e)
 		{
-			Tools.Load<LogWindow>();
+			//RTC_HIJACK - Replace bizhawk console with ours 
+			RTCV.BizhawkVanguard.Hooks.SHOW_CONSOLE(true);
+
+			//Tools.Load<LogWindow>();
 		}
 
 		private void ConfigSubMenu_DropDownOpened(object sender, EventArgs e)
@@ -844,6 +851,10 @@ namespace BizHawk.Client.EmuHawk
 			using var controller = new ControllerConfig(this, Emulator, Config);
 			if (controller.ShowDialog().IsOk())
 			{
+
+				//RTC_Hijack : Force save Controller config
+				RTCV.BizhawkVanguard.Hooks.BIZHAWK_MAINFORM_SAVECONFIG();
+
 				AddOnScreenMessage("Controller settings saved");
 				InitControls();
 				InputManager.SyncControls(Emulator, MovieSession, Config);
@@ -859,6 +870,9 @@ namespace BizHawk.Client.EmuHawk
 			using var hotkeyConfig = new HotkeyConfig(Config);
 			if (hotkeyConfig.ShowDialog().IsOk())
 			{
+				//RTC_Hijack : Force save Hotkey config
+				RTCV.BizhawkVanguard.Hooks.BIZHAWK_MAINFORM_SAVECONFIG();
+
 				AddOnScreenMessage("Hotkey settings saved");
 				InitControls();
 				InputManager.SyncControls(Emulator, MovieSession, Config);

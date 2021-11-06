@@ -17,6 +17,10 @@ namespace BizHawk.Client.EmuHawk
 		/// </summary>
 		private void InitializeComponent()
 		{
+			//RTC_HIJACK : Add ResizeEnd and FormClosing Handlers to MainForm.Designer.cs
+			this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+
 			this.components = new System.ComponentModel.Container();
 			this.MainformMenu = new BizHawk.WinForms.Controls.MenuStripEx();
 			this.FileSubMenu = new BizHawk.WinForms.Controls.ToolStripMenuItemEx();
@@ -1066,7 +1070,8 @@ namespace BizHawk.Client.EmuHawk
 			this.HotkeysMenuItem,
 			this.DisplayConfigMenuItem,
 			this.SoundMenuItem,
-			this.PathsMenuItem,
+			//RTC_HIJACK : Hide Paths Menu Item
+            //this.PathsMenuItem,
 			this.FirmwaresMenuItem,
 			this.MessagesMenuItem,
 			this.AutofireMenuItem,
@@ -2530,7 +2535,10 @@ namespace BizHawk.Client.EmuHawk
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx ToolBoxMenuItem;
 		private BizHawk.WinForms.Controls.ToolStripSeparatorEx toolStripSeparator12;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx SwitchToFullscreenMenuItem;
-		private StatusStripEx MainStatusBar;
+
+		//RTC_HIJACK : Put MainStatusBar public
+		public StatusStripEx MainStatusBar;
+
 		private BizHawk.WinForms.Controls.StatusLabelEx EmuStatus;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx MessagesMenuItem;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx TI83SubMenu;
@@ -2570,7 +2578,10 @@ namespace BizHawk.Client.EmuHawk
 		private System.Windows.Forms.ToolStripDropDownButton PlayRecordStatusButton;
 		private System.Windows.Forms.ToolStripDropDownButton DumpStatusButton;
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx ViewSubtitlesContextMenuItem;
-		private MenuStripEx MainformMenu;
+
+		//RTC_HIJACK : put MainformMenu public
+		public MenuStripEx MainformMenu;
+
 		private BizHawk.WinForms.Controls.ToolStripMenuItemEx GBSubMenu;
 		private BizHawk.WinForms.Controls.StatusLabelEx SaveSlotsStatusLabel;
 		private BizHawk.WinForms.Controls.StatusLabelEx Slot1StatusButton;

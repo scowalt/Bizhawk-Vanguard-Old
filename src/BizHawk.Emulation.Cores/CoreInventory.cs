@@ -143,6 +143,7 @@ namespace BizHawk.Emulation.Cores
 					ExceptionDispatchInfo.Capture(e.InnerException).Throw();
 					throw; // Needed only for flow analysis -- CSC doesn't know that ExceptionDispatchInfo.Throw() never returns
 				}
+				new object();
 			}
 		}
 

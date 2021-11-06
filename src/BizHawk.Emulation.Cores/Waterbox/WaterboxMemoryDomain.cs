@@ -78,20 +78,23 @@ namespace BizHawk.Emulation.Cores.Waterbox
 
 		public override void PokeByte(long addr, byte val)
 		{
-			if (Writable)
+			//RTC_HIJACK
+			//Ignore the Writable flag 
+			//if (Writable)
+			//{
+			if ((ulong)addr < (ulong)Size)
 			{
-				if ((ulong)addr < (ulong)Size)
+				using (_monitor.EnterExit())
 				{
-					using (_monitor.EnterExit())
-					{
-						((byte*)_data)[addr ^ _addressMangler] = val;
-					}
-				}
-				else
-				{
-					throw new ArgumentOutOfRangeException(nameof(addr));
+					((byte*)_data)[addr ^ _addressMangler] = val;
 				}
 			}
+			else
+			{
+				throw new ArgumentOutOfRangeException(nameof(addr));
+			}
+
+			//}//HIJACK_END
 		}
 
 		public override void BulkPeekByte(Range<long> addresses, byte[] values)

@@ -208,6 +208,9 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64
 			RunThreadAction(() => { _pendingThreadTerminate = true; });
 		}
 
+		///RTC_HIJACK
+		private bool crashed = false;
+
 		public bool FrameAdvance(IController controller, bool render, bool rendersound)
 		{
 			_inputProvider.Controller = controller;
@@ -228,7 +231,9 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64
 				api.hard_reset();
 			}
 
-			api.frame_advance();
+			//RTC_HIJACK. If it's crashed, don't try and advance any more. 
+			if (!crashed && !api.frame_advance())
+				crashed = true;
 
 
 			if (IsLagFrame)

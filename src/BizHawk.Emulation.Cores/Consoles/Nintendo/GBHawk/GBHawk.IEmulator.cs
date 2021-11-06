@@ -29,6 +29,7 @@ namespace BizHawk.Emulation.Cores.Nintendo.GBHawk
 		{
 			//Console.WriteLine("-----------------------FRAME-----------------------");
 
+
 			//Update the color palette if a setting changed
 			if (_settings.Palette == GBSettings.PaletteType.BW)
 			{
@@ -92,6 +93,7 @@ namespace BizHawk.Emulation.Cores.Nintendo.GBHawk
 
 			return true;
 		}
+
 
 		public void do_frame(IController controller)
 		{

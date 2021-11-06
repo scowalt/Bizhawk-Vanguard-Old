@@ -160,9 +160,16 @@ namespace BizHawk.Emulation.Cores.Nintendo.NES
 
 		public override byte PeekReg2xxx(int addr)
 		{
-			if (addr < 0x3FF0)
-				return NSFROM[addr - 0x3800];
-			else return base.PeekReg2xxx(addr);
+			try //RTC_Hijack fix nsf out of bounds for system bus
+			{
+				if (addr < 0x3FF0)
+					return NSFROM[addr - 0x3800];
+				else return base.PeekReg2xxx(addr);
+			}
+			catch
+			{
+				return 0;
+			}
 		}
 
 		public override byte ReadReg2xxx(int addr)
@@ -322,17 +329,22 @@ namespace BizHawk.Emulation.Cores.Nintendo.NES
 			//LEFT: prev song
 			//A: restart song
 
+			//RTC_Hijack :: control NSF from System Bus 0x00CE
+			ushort songChangeAdress = 0x00CE;//RTC_Hijack
+			byte songValue = NES.ReadMemory(songChangeAdress);//RTC_Hijack
 			bool reset = false;
-			if (right)
+			if (right || (songValue == 0xFB)) //RTC_Hijack
 			{
+				NES.WriteMemory(songChangeAdress, 0xFF); //RTC_Hijack
 				if (CurrentSong < nsf.TotalSongs - 1)
 				{
 					CurrentSong++;
 					reset = true;
 				}
 			}
-			if (left)
+			if (left || (songValue == 0xFA)) //RTC_Hijack
 			{
+				NES.WriteMemory(songChangeAdress, 0xFF); //RTC_Hijack
 				if (CurrentSong > 0)
 				{
 					CurrentSong--;
@@ -367,21 +379,29 @@ namespace BizHawk.Emulation.Cores.Nintendo.NES
 			}
 			else
 			{
-				if (BankSwitched)
+				//RTC_HIJACK - Fix corrupting NSFs 
+				try
 				{
-					int bank_4k = addr >> 12;
-					int ofs = addr & ((1 << 12) - 1);
-					bank_4k = prg_banks_4k[bank_4k];
-					addr = (bank_4k << 12) | ofs;
+					if (BankSwitched)
+					{
+						int bank_4k = addr >> 12;
+						int ofs = addr & ((1 << 12) - 1);
+						bank_4k = prg_banks_4k[bank_4k];
+						addr = (bank_4k << 12) | ofs;
 
-					//rom data began at 0x80 of the NSF file
-					addr += 0x80;
+						//rom data began at 0x80 of the NSF file
+						addr += 0x80;
 
-					return Rom[addr];
+						return Rom[addr];
+					}
+					else
+					{
+						return FakePRG[addr];
+					}
 				}
-				else
+				catch
 				{
-					return FakePRG[addr];
+					return 0;
 				}
 			}
 		}

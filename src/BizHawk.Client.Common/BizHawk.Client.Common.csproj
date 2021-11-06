@@ -13,6 +13,8 @@
 		<PackageReference Include="SharpCompress" Version="0.26.0" /><!-- can't upgrade as newer versions transitively depend on incompatible version of System.Runtime.CompilerServices.Unsafe -->
 		<ProjectReference Include="$(ProjectDir)../BizHawk.Emulation.Cores/BizHawk.Emulation.Cores.csproj" />
 		<ProjectReference Include="$(ProjectDir)../BizHawk.Bizware.BizwareGL/BizHawk.Bizware.BizwareGL.csproj" />
+		<ProjectReference Include="..\..\..\RTCV\Source\Libraries\CorruptCore\CorruptCore.csproj" />
+		<ProjectReference Include="..\..\..\RTCV\Source\Libraries\NetCore\NetCore.csproj" />
 		<EmbeddedResource Include="Resources/**/*" />
 	</ItemGroup>
 	<ItemGroup>

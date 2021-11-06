@@ -13,6 +13,8 @@ namespace BizHawk.Emulation.Cores.Nintendo.GBHawkLink
 		public bool FrameAdvance(IController controller, bool render, bool renderSound)
 		{
 			//Console.WriteLine("-----------------------FRAME-----------------------");
+
+
 			//Update the color palette if a setting changed
 			if (linkSettings.Palette_L == GBHawk.GBHawk.GBSettings.PaletteType.BW)
 			{

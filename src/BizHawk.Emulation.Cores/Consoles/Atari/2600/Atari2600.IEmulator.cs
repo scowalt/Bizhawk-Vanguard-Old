@@ -9,8 +9,15 @@ namespace BizHawk.Emulation.Cores.Atari.Atari2600
 
 		public ControllerDefinition ControllerDefinition => _controllerDeck.Definition;
 
+		//RTC_Hijack
+		private bool crashed = false;
+
 		public bool FrameAdvance(IController controller, bool render, bool renderSound)
 		{
+			//RTC_Hijack
+			if (crashed)
+				return false;
+
 			_controller = controller;
 
 			_islag = true;
@@ -56,7 +63,10 @@ namespace BizHawk.Emulation.Cores.Atari.Atari2600
 					}
 					else
 					{
-						throw new Exception("ERROR: Unable to resolve Frame. Please Report.");
+						//RTC_Hijack - Exception to return
+						//throw new Exception("ERROR: Unable to resolve Frame. Please Report.");
+						crashed = true;
+						return false;
 					}
 				}
 			}

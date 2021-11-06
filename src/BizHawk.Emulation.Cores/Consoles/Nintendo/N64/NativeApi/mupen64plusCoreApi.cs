@@ -742,7 +742,8 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64.NativeApi
 
 		private BreakParams _breakparams;
 
-		public void frame_advance()
+		//RTC_HIJACK - Make this a bool so we can return false if it's crashed
+		public bool frame_advance()
 		{
 #if false // for alt. method #2 below
 		static bool IsNativeWaitSuccessful(uint count, uint nativeResult, out int managedResult)
@@ -802,7 +803,7 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64.NativeApi
 		}
 #endif
 
-			if (!emulator_running) return;
+			if (!emulator_running) return false;
 
 			event_frameend = false;
 			m64pCoreDoCommandPtr(m64p_command.M64CMD_ADVANCE_FRAME, 0, IntPtr.Zero);
@@ -819,6 +820,7 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64.NativeApi
 #else // alt. method #2 - functionally the same as WaitOne(), but pumps com messages
 				HackyComWaitOne(m64pEvent);
 #endif
+
 				if (event_frameend)
 					break;
 				if (event_breakpoint)
@@ -849,6 +851,9 @@ namespace BizHawk.Emulation.Cores.Nintendo.N64.NativeApi
 				if (!emulator_running)
 					break;
 			}
+
+			//RTC_HIJACK Always return something
+			return true;
 		}
 
 		public void OnBreakpoint(BreakParams breakparams)

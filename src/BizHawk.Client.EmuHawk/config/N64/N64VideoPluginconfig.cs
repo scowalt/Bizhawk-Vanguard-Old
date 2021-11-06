@@ -13,7 +13,8 @@ namespace BizHawk.Client.EmuHawk
 	public partial class N64VideoPluginConfig : Form
 	{
 		private readonly IMainFormForConfig _mainForm;
-		private readonly Config _config;
+		//RTC_Hijack : Make N64 config public static
+		public static Config _config;
 		private readonly IEmulator _emulator;
 		private readonly N64Settings _s;
 		private readonly N64SyncSettings _ss;
@@ -79,6 +80,10 @@ namespace BizHawk.Client.EmuHawk
 		{
 			SaveSettings();
 			DialogResult = DialogResult.OK;
+
+			//RTC_HIJACK - save config after saving plugin settings
+			RTCV.BizhawkVanguard.Hooks.BIZHAWK_MAINFORM_SAVECONFIG();
+
 			Close();
 		}
 

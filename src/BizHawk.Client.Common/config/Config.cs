@@ -318,7 +318,7 @@ namespace BizHawk.Client.Common
 		public Dictionary<string, string> PreferredCores = new Dictionary<string, string>
 		{
 			["NES"] = CoreNames.QuickNes,
-			["SNES"] = CoreNames.Snes9X,
+			["SNES"] = CoreNames.Bsnes, //RTC_Hijack : Prefer Bsnes by default
 			["GB"] = CoreNames.Gambatte,
 			["GBC"] = CoreNames.Gambatte,
 			["DGB"] = CoreNames.DualGambatte,

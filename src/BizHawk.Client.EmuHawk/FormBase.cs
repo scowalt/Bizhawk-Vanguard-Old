@@ -13,7 +13,8 @@ namespace BizHawk.Client.EmuHawk
 {
 	public class FormBase : Form
 	{
-		private const string PLACEHOLDER_TITLE = "(will take value from WindowTitle/WindowTitleStatic)";
+		//RTC_Hijack
+		private const string PLACEHOLDER_TITLE = "Bizhawk";
 
 		/// <summary>
 		/// Under Mono, <see cref="SystemColors.Control">SystemColors.Control</see> returns an ugly beige.<br/>
@@ -69,9 +70,13 @@ namespace BizHawk.Client.EmuHawk
 			UpdateWindowTitle();
 		}
 
+		//RTC_Hijack : Don't change the Mainform Title
+		public void UpdateWindowTitle() { }
+		/*
 		public void UpdateWindowTitle()
 			=> base.Text = Config?.UseStaticWindowTitles == true
 				? (_windowTitleStatic ??= WindowTitleStatic)
 				: WindowTitle;
+		*/
 	}
 }

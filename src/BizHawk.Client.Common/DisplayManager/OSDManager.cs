@@ -92,6 +92,10 @@ namespace BizHawk.Client.Common
 
 		public void AddMessage(string message)
 		{
+			//RTC_HIJACK : Disable OSD Messages (Add this block)
+			if ((bool?)(RTCV.NetCore.AllSpec.CorruptCoreSpec?[RTCV.CorruptCore.RTCSPEC.CORE_EMULATOROSDDISABLED.ToString()]) ?? false)
+				return;
+			//--------------------------------
 			_messages.Add(new UIMessage { Message = message, ExpireAt = DateTime.Now + TimeSpan.FromSeconds(2) });
 		}
 

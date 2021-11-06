@@ -15,6 +15,7 @@ using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk.CustomControls;
 
 using OSTC = EXE_PROJECT.OSTailoredCode;
+using RTCV.BizhawkVanguard;
 
 namespace BizHawk.Client.EmuHawk
 {
@@ -25,6 +26,12 @@ namespace BizHawk.Client.EmuHawk
 			//this needs to be done before the warnings/errors show up
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+
+			//RTC_Hijack : Hijack unhandled errors
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+			Application.ThreadException += (o, e) => VanguardCore.ApplicationThreadException(GlobalWin.MainForm, e);
+			AppDomain.CurrentDomain.UnhandledException += (o, e) => VanguardCore.CurrentDomainOnUnhandledException(GlobalWin.MainForm, e);
+			//-------------------------
 
 			if (OSTC.IsUnixHost)
 			{
@@ -79,6 +86,9 @@ namespace BizHawk.Client.EmuHawk
 		[STAThread]
 		private static int Main(string[] args)
 		{
+			//RTC_Hijack : Hook before form is created
+			Hooks.MAIN_BIZHAWK(args);
+
 			var exitCode = SubMain(args);
 			if (OSTC.IsUnixHost)
 			{
@@ -250,6 +260,10 @@ namespace BizHawk.Client.EmuHawk
 			}
 			catch (Exception e) when (!Debugger.IsAttached)
 			{
+				//RTC_Hijack - ignore AbortEverythingException
+				if (e is RTCV.NetCore.AbortEverythingException)
+					return 0;
+
 				new ExceptionBox(e).ShowDialog();
 			}
 			finally
@@ -301,6 +315,53 @@ namespace BizHawk.Client.EmuHawk
 			{
 				var firstAsm = Array.Find(AppDomain.CurrentDomain.GetAssemblies(), asm => asm.FullName == requested);
 				if (firstAsm != null) return firstAsm;
+
+				{ //RTC_Hijack - Add our dlls into assemblyresolve
+
+					//------------------
+					string callerName = args?.RequestingAssembly?.GetName().Name;
+					var RTC_fname = "";
+					string asmName = new AssemblyName(requested).Name;
+					string RTC_dllname = "";
+					string RTC_directory = "";
+					string RTC_simpleName = "";
+
+					if (callerName != string.Empty)
+						Console.WriteLine("Resolving assembly " + asmName + " from " + callerName);
+					if (asmName == "StandaloneRTC" ||
+						asmName == "CorruptCore" ||
+						asmName == "Vanguard" ||
+						asmName == "UI" ||
+						asmName == "NetCore" ||
+						asmName == "RTCV.Common" ||
+						asmName == "NLog" ||
+						asmName == "NLog.Windows.Forms" ||
+						asmName == "Ceras" ||
+						asmName == "System.ValueTuple" ||
+						asmName == "System.Buffers" ||
+						callerName == "StandaloneRTC" ||
+						callerName == "CorruptCore" ||
+						callerName == "Vanguard" ||
+						callerName == "UI" ||
+						callerName == "NetCore" ||
+						callerName == "RTCV.Common" ||
+						callerName == "NLog" ||
+						callerName == "NLog.Windows.Forms" ||
+						callerName == "Ceras" ||
+						callerName == "System.ValueTuple" ||
+						callerName == "System.Buffers")
+					{
+						RTC_dllname = new AssemblyName(requested).Name + ".dll";
+						RTC_directory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "RTCV");
+						RTC_simpleName = new AssemblyName(requested).Name;
+						if (RTC_simpleName == "NLua" || RTC_simpleName == "KopiLua") RTC_directory = Path.Combine(RTC_directory, "nlua");
+						RTC_fname = Path.Combine(RTC_directory, RTC_dllname);
+						if (File.Exists(RTC_fname))
+							return Assembly.UnsafeLoadFrom(RTC_fname);
+					}
+				}
+				//---------
+
 
 				//load missing assemblies by trying to find them in the dll directory
 				var dllname = $"{new AssemblyName(requested).Name}.dll";

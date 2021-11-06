@@ -628,7 +628,8 @@ namespace BizHawk.Client.EmuHawk
 			}
 		}
 
-		private void SetMemoryDomain(string name)
+		//RTC_Hijack : Make SetMemoryDomain public
+		public void SetMemoryDomain(string name)
 		{
 			if (!(MainForm.CurrentlyOpenRomArgs.OpenAdvanced is OpenAdvanced_MAME) && name == _romDomain.Name)
 			{
@@ -682,7 +683,8 @@ namespace BizHawk.Client.EmuHawk
 			UpdateGroupBoxTitle();
 		}
 
-		private void GoToAddress(long address)
+		//RTC_Hijack make Hexeditor GoToAddress public
+		public void GoToAddress(long address)
 		{
 			if (address < 0)
 			{
@@ -1645,6 +1647,19 @@ namespace BizHawk.Client.EmuHawk
 			Tools.UpdateCheatRelatedTools(null, null);
 			MemoryViewerBox.Refresh();
 		}
+
+		//RTC_HIJACK
+		private void CreateVMDFromSelectedMenuItem_Click(object sender, EventArgs e)
+		{
+			if (_highlightedAddress == null) return;
+
+			List<long> allAddresses = new List<long>() { _highlightedAddress.Value };
+			allAddresses.AddRange(_secondaryHighlightedAddresses);
+			RTCV.BizhawkVanguard.Hooks.CREATE_VMD_FROM_SELECTED_HEXEDITOR(_domain.ToString(), allAddresses, DataSize);
+
+			MemoryViewerBox.Refresh();
+		}
+		//-------------------------------
 
 		private void UnfreezeAllMenuItem_Click(object sender, EventArgs e)
 		{

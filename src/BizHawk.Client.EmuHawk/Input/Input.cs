@@ -326,7 +326,7 @@ namespace BizHawk.Client.EmuHawk
 
 		private static bool ShouldSwallow(AllowInput allowInput, InputEvent inputEvent)
 		{
-			return allowInput == AllowInput.None || (allowInput == AllowInput.OnlyController && inputEvent.Source != ClientInputFocus.Pad);
+			return allowInput == AllowInput.None || (allowInput == AllowInput.OnlyController && inputEvent.Source != ClientInputFocus.Pad) || RTCV.BizhawkVanguard.Hooks.IsAllowedBackgroundInputForm(); //RTC_Hijack : Polling RTC focus for Background input
 		}
 
 		public void StartListeningForAxisEvents()

@@ -1,4 +1,4 @@
-# BizHawk
+# BizHawk-Vanguard (Emulator modded for RTCV), see RTCV repo for information
 
 A multi-system emulator written in C#. As well as quality-of-life features for casual players, it also has recording/playback and debugging tools, making it the first choice for TASers (Tool-Assisted Speedrunners).
 

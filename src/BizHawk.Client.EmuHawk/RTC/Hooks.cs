@@ -718,20 +718,35 @@ namespace RTCV.BizhawkVanguard
 		{
 			get
 			{
-				SettingsAdapter settable = new SettingsAdapter(Global.Emulator);
-				if (settable.HasSyncSettings)
+				try
 				{
-					string ss = ConfigService.SaveWithType(settable.GetSyncSettings());
-					return ss;
+					SettingsAdapter settable = new SettingsAdapter(Global.Emulator);
+					if (settable.HasSyncSettings)
+					{
+						string ss = ConfigService.SaveWithType(settable.GetSyncSettings());
+						return ss;
+					}
 				}
+				catch(Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+				}
+
 				return null;
 			}
 			set
 			{
-				SettingsAdapter settable = new SettingsAdapter(Global.Emulator);
-				if (settable.HasSyncSettings)
+				try
 				{
-					settable.PutSyncSettings(ConfigService.LoadWithType(value));
+					SettingsAdapter settable = new SettingsAdapter(Global.Emulator);
+					if (settable.HasSyncSettings)
+					{
+						settable.PutSyncSettings(ConfigService.LoadWithType(value));
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
 				}
 			}
 		}

@@ -286,6 +286,10 @@ namespace BizHawk.Emulation.Common
 		public MemoryDomainIntPtrMonitor(string name, Endian endian, IntPtr data, long size, bool writable, int wordSize,
 			IMonitor monitor)
 		{
+
+			//RTC_Hijack
+			writable = true;
+
 			Name = name;
 			EndianType = endian;
 			Data = data;

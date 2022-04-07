@@ -22,9 +22,13 @@ namespace BizHawk.Client.Common
 			(new[] { "NES" },
 				new[] { CoreNames.QuickNes, CoreNames.NesHawk, CoreNames.SubNesHawk }),
 			(new[] { "SNES" },
-				new[] { CoreNames.Faust, CoreNames.Snes9X, CoreNames.Bsnes, CoreNames.Bsnes115 }),
+				//RTC_Hijack : Remove unstable waterbox cores for now
+				//new[] { CoreNames.Faust, CoreNames.Snes9X, CoreNames.Bsnes, CoreNames.Bsnes115 }),
+				new[] { CoreNames.Snes9X, CoreNames.Bsnes }),
 			(new[] { "SGB" },
-				new[] { CoreNames.Gambatte, CoreNames.Bsnes, CoreNames.Bsnes115}),
+				//RTC_Hijack : Remove unstable waterbox cores for now
+				//new[] { CoreNames.Gambatte, CoreNames.Bsnes, CoreNames.Bsnes115}),
+				new[] { CoreNames.Gambatte, CoreNames.Bsnes}),
 			(new[] { "GB", "GBC" },
 				new[] { CoreNames.Gambatte, CoreNames.GbHawk, CoreNames.SubGbHawk }),
 			(new[] { "DGB" },
